@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
 
 	socket.on('createMessage', (msg) => {
 		msg.createdAt = 0987654;
-		socket.emit('newMessage', msg);
+		io.emit('newMessage', msg);
 	});
 
 	socket.on('disconnect', () => {
