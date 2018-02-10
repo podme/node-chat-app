@@ -9,24 +9,18 @@ var app = express();
 var server = http.createServer(app);
 const socketIO = require('socket.io');
 var io = socketIO(server);
+const {generateMessage} = require('./utils/message');
 
 app.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
 	console.log('new user connected');
 	
-	socket.emit('newMessage', {
-		from : 'Admin',
-		text: 'Welcome to the chat app!',
-		createdAt : new Date().getTime()
-	});	
+
+	socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));	
 
 	// broadcasts to everyone except this socket (sender) 
-	socket.broadcast.emit('newMessage', {
-		from : 'Admin',
-		text: 'New user joined',
-		createdAt : new Date().getTime()
-	});
+	socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 	socket.on('createMessage', (msg) => {
 		// broadcasts to everyone.
 		// io.emit('newMessage', {
@@ -36,11 +30,8 @@ io.on('connection', (socket) => {
 		// });
 
 		// broadcasts to everyone except this socket (sender) 
-		socket.broadcast.emit('newMessage', {
-			from : msg.from,
-			text: msg.text,
-			createdAt : new Date().getTime()
-		});
+		
+		socket.broadcast.emit('newMessage', generateMessage(msg.from, msg.text));
 	});
 
 	socket.on('disconnect', () => {
