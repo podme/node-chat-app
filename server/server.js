@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
 
 	// broadcasts to everyone except this socket (sender) 
 	socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
-	socket.on('createMessage', (msg) => {
+	socket.on('createMessage', (msg, callback) => {
 		// broadcasts to everyone.
 		// io.emit('newMessage', {
 		// 	from : msg.from,
@@ -30,8 +30,9 @@ io.on('connection', (socket) => {
 		// });
 
 		// broadcasts to everyone except this socket (sender) 
-		
-		socket.broadcast.emit('newMessage', generateMessage(msg.from, msg.text));
+
+		io.emit('newMessage', generateMessage(msg.from, msg.text));
+		callback('This is from the server');
 	});
 
 	socket.on('disconnect', () => {
