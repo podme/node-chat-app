@@ -16,8 +16,12 @@ io.on('connection', (socket) => {
 	console.log('new user connected');
 
 	socket.on('createMessage', (msg) => {
-		msg.createdAt = 0987654;
-		io.emit('newMessage', msg);
+		// msg.createdAt = 0987654;
+		io.emit('newMessage', {
+			from : msg.from,
+			text: msg.text,
+			createdAt : new Date().getTime()
+		});
 	});
 
 	socket.on('disconnect', () => {
