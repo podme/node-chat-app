@@ -9,7 +9,7 @@ var app = express();
 var server = http.createServer(app);
 const socketIO = require('socket.io');
 var io = socketIO(server);
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 app.use(express.static(publicPath));
 
@@ -22,22 +22,20 @@ io.on('connection', (socket) => {
 	// broadcasts to everyone except this socket (sender) 
 	socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
 	socket.on('createMessage', (msg, callback) => {
-		// broadcasts to everyone.
-		// io.emit('newMessage', {
-		// 	from : msg.from,
-		// 	text: msg.text,
-		// 	createdAt : new Date().getTime()
-		// });
-
 		// broadcasts to everyone except this socket (sender) 
-
 		io.emit('newMessage', generateMessage(msg.from, msg.text));
 		callback('This is from the server');
+	});
+
+	socket.on('createLocationMessage', (coords) => {
+		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
 	});
 
 	socket.on('disconnect', () => {
 		console.log('client disconnected');
 	});
+
+
 });
 
 server.listen(port, () => {
