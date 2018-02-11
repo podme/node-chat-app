@@ -24,7 +24,8 @@ io.on('connection', (socket) => {
 	socket.on('createMessage', (msg, callback) => {
 		// broadcasts to everyone except this socket (sender) 
 		io.emit('newMessage', generateMessage(msg.from, msg.text));
-		callback('This is from the server');
+		// clear the textbox
+		callback();
 	});
 
 	socket.on('createLocationMessage', (coords) => {
