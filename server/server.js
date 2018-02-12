@@ -26,6 +26,13 @@ io.on('connection', (socket) => {
 		if(!isRealString(params.name)||!isRealString(params.room)){
 			return callback('Name and room name are required.');
 		}
+
+		// reject duplicate usernames
+		var existingSameName = users.users.filter((user) => user.name === params.name);
+		if(existingSameName.length){
+			return callback('User already exists');
+		}
+
 		socket.join(params.room);
 		users.removeUser(socket.id);//remove them from any potential previous rooms
 		users.addUser(socket.id, params.name, params.room);

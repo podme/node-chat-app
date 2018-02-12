@@ -24,6 +24,7 @@ socket.on('connect', function () {
 	// 	text: 'Hey ho'
 	// });
 	var params = $.deparam(window.location.search);
+	params.room = params.room.toLowerCase();
 	// alert(JSON.stringify(params));
 	socket.emit('join', params, function (err) {
 		if(err){
