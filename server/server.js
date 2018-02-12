@@ -38,14 +38,22 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('createMessage', (msg, callback) => {
-		// broadcasts to everyone except this socket (sender) 
-		io.emit('newMessage', generateMessage(msg.from, msg.text));
+		var user = users.getUser(socket.id);
+		if(user && isRealString(msg.text)){
+			// broadcasts to everyone in this room except this socket (sender) 
+			io.to(user.room).emit('newMessage', generateMessage(user.name, msg.text));
+		}
 		// clear the textbox
 		callback();
 	});
 
 	socket.on('createLocationMessage', (coords) => {
-		io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+		var user = users.getUser(socket.id);
+		if(user){
+			// broadcasts to everyone in this room except this socket (sender) 
+			io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+		}
+		
 	});
 
 	socket.on('disconnect', () => {
