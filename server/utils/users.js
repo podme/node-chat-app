@@ -31,6 +31,11 @@ class Users {
 		var namesArray = users.map((user) => user.name);
 		return namesArray;
 	}
+	getRoomList () {
+		//singleInstancesOfRooms
+		// return this.users.map(a => a.room);
+		return [...new Set(this.users.map(i => i.room))]; //https://stackoverflow.com/a/35092559/5350539
+	}
 }
 module.exports = {Users};
 

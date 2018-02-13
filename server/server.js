@@ -20,10 +20,13 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
 	console.log('new user connected');
 	
-	// broadcasts to everyone except this socket (sender) 
+	socket.on('arrive', (params, callback) => {
+
+		socket.emit('updateRoomList', users.getRoomList());
+	});
 
 	socket.on('join', (params, callback) => {
-		if(!isRealString(params.name)||!isRealString(params.room)){
+		if(!isRealString(params.name)||(!isRealString(params.room)&&params.selectroom==='')){
 			return callback('Name and room name are required.');
 		}
 
@@ -32,6 +35,7 @@ io.on('connection', (socket) => {
 		if(existingSameName.length){
 			return callback('User already exists');
 		}
+		params.room = params.room === '' ? params.selectroom : params.room;
 
 		socket.join(params.room);
 		users.removeUser(socket.id);//remove them from any potential previous rooms
@@ -39,6 +43,7 @@ io.on('connection', (socket) => {
 
 		io.to(params.room).emit('updateUserList', users.getUserList(params.room));
 		socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));	
+		// broadcasts to everyone in this room except this socket (sender) 
 		socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`));
 	
 		callback();//pass no error

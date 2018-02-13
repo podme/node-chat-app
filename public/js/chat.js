@@ -19,13 +19,8 @@ function scrollToBottom () {
 
 socket.on('connect', function () {
 	console.log('connected to server');
-	// socket.emit('createMessage', {
-	// 	from: 'client@example.com',
-	// 	text: 'Hey ho'
-	// });
 	var params = $.deparam(window.location.search);
 	params.room = params.room.toLowerCase();
-	// alert(JSON.stringify(params));
 	socket.emit('join', params, function (err) {
 		if(err){
 			alert(err);
@@ -34,6 +29,12 @@ socket.on('connect', function () {
 			console.log('no error');
 		}
 	});
+
+	var template = $('#room-template').html();
+	var html = Mustache.render(template, {
+		room: params.room === '' ? params.selectroom : params.room
+	});
+	$('#roomName').append(html);
 });
 socket.on('disconnect', function () {
 	console.log('Disconnected from server');

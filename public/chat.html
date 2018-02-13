@@ -8,7 +8,7 @@
 </head>
 <body class="chat"> 
 	<div class="chat__sidebar">
-		<h3>People</h3>
+		<div id="roomName"></div>
 		<div id="users"></div>
 	</div>
 	<div class="chat__main">
@@ -21,6 +21,9 @@
 			<button id="send-location">Send Location</button>
 		</div>
 	</div>
+	<script id="room-template" type="text/template">
+		<h3>{{room}}</h3>
+	</script>
 	<script id="message-template" type="text/template">
 		<li class="message">
 			<div class="message__title">
