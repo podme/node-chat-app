@@ -4,7 +4,6 @@ var generateMessage = (from, text) => {
 		from,
 		text,
 		createdAt: moment().valueOf()
-
 	}
 };
 

@@ -31,7 +31,8 @@
 				<span>{{createdAt}}</span>
 			</div>
 			<div class="message__body">
-				<p>{{text}}</p>
+				<!-- triple {{{}}} is unescaped html, so it can render e.g. strong text -->
+				<p>{{{text}}}</p>
 			</div>
 		</li>
 	</script>
