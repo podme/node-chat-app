@@ -21,7 +21,7 @@ io.on('connection', (socket) => {
 	console.log('new user connected');
 	
 	socket.on('arrive', (params, callback) => {
-
+		// when someone arrives, they need the room list
 		socket.emit('updateRoomList', users.getRoomList());
 	});
 
@@ -46,6 +46,9 @@ io.on('connection', (socket) => {
 		// broadcasts to everyone in this room except this socket (sender) 
 		socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined.`));
 	
+		// when a new room is created, anyone else about to log in needs to see it immediately in the drop down select
+		socket.broadcast.emit('updateRoomList', users.getRoomList());
+
 		callback();//pass no error
 	});
 
