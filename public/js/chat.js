@@ -34,7 +34,7 @@ socket.on('connect', function () {
 	var html = Mustache.render(template, {
 		room: params.room === '' ? params.selectroom : params.room
 	});
-	$('#roomName').append(html);
+	$('#roomName').html(html);
 });
 socket.on('disconnect', function () {
 	console.log('Disconnected from server');
